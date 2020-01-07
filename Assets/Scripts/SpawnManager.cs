@@ -6,7 +6,7 @@ public class SpawnManager : MonoBehaviour
 {
 
     [SerializeField]
-    private GameObject _enemyPrefab;
+    private Enemy _enemyPrefab;
 
     [SerializeField]
     private GameObject _enemyContainer;
@@ -31,7 +31,7 @@ public class SpawnManager : MonoBehaviour
 
             float randomX = Random.Range(-8f,8f);
 
-            GameObject newEnemy = Instantiate(_enemyPrefab,new Vector3(randomX, 7f,0),Quaternion.identity);
+            Enemy newEnemy = Instantiate(_enemyPrefab,new Vector3(randomX, 7f,0),Quaternion.identity);
             // Here I say that the parent of new enemy is the enemy container
             newEnemy.transform.parent = _enemyContainer.transform;
             yield return new WaitForSeconds(5.0f);

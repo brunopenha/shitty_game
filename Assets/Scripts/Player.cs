@@ -12,7 +12,6 @@ public class Player : MonoBehaviour
 
     [SerializeField]
     private float _fireRate = 0.5f;
-    [SerializeField]
     private float _nextFire = 0.0f;
 
     [SerializeField]
@@ -81,7 +80,7 @@ public class Player : MonoBehaviour
         _nextFire = Time.time + _fireRate;
         //Debug.Log("Piu!");
         // When we add the position with the Vector and this is called as offset
-        Instantiate(_laserPrefab, transform.position + new Vector3(0, 0.8f, 0), Quaternion.identity);
+        Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
 
     }
 
