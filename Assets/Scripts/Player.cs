@@ -9,6 +9,8 @@ public class Player : MonoBehaviour
     private float _speed = 3.5f;
     [SerializeField]
     private GameObject _laserPrefab;
+    [SerializeField]
+    private GameObject _tripleShotPrefab;
 
     [SerializeField]
     private float _fireRate = 0.5f;
@@ -19,6 +21,9 @@ public class Player : MonoBehaviour
 
     private SpawnManager _spawnManager;
 
+    [SerializeField]
+    private bool _isTripleShootActive = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,6 +33,7 @@ public class Player : MonoBehaviour
             Debug.LogError("Spawn_Manager is NULL");
         }
     }
+
 
     // Update is called once per frame
     void Update()
@@ -41,7 +47,11 @@ public class Player : MonoBehaviour
         }
     }
 
-
+    public void SpeedUp()
+    {
+        _speed = 10.0f;
+        StartCoroutine(SlowDownRoutine());
+    }
 
     void calculaMovimento()
     {
@@ -79,9 +89,16 @@ public class Player : MonoBehaviour
     {
         _nextFire = Time.time + _fireRate;
         //Debug.Log("Piu!");
+
+    if(_isTripleShootActive){
+        Instantiate(_tripleShotPrefab,transform.position,Quaternion.identity);
+    }else{
         // When we add the position with the Vector and this is called as offset
         Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
 
+    }
+
+        
     }
 
     public void Damage(){
@@ -94,6 +111,30 @@ public class Player : MonoBehaviour
             }
             
             Destroy(this.gameObject);
+        }
+    }
+
+    public void  ActiveTripleShot()
+    {
+        _isTripleShootActive = true;
+        StartCoroutine(TriplePowerDownRoutine());
+    }
+
+    IEnumerator TriplePowerDownRoutine(){
+
+        while(true){
+
+            yield return new WaitForSeconds(5.0f);
+            _isTripleShootActive = false;
+        }
+
+    }
+
+     private IEnumerator SlowDownRoutine()
+    {
+        while(true){
+            yield return new WaitForSeconds(5.0f);
+            _speed = 5.0f;
         }
     }
 }

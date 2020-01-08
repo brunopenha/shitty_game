@@ -6,6 +6,8 @@ MonoImporter:
   defaultReferences:
   - _enemyPrefab: {fileID: 3017665506026535046, guid: 0ffbcaaf68d43b858aad014a31252d13,
       type: 3}
+  - _powerUpPrefab: {fileID: 2789085826290239286, guid: 690a2acf9027dcce588aaceb1a5bfd4c,
+      type: 3}
   - _enemyContainer: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
