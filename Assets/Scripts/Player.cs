@@ -21,8 +21,17 @@ public class Player : MonoBehaviour
 
     private SpawnManager _spawnManager;
 
-    [SerializeField]
     private bool _isTripleShootActive = false;
+    private bool _isSpeedUpActive = false;
+    private bool _isShieldActivated = false;
+    
+    [SerializeField]
+    private GameObject _shieldUI;
+
+    [SerializeField]
+    private int _score;
+
+    private UIManager _uiManager;
 
     // Start is called before the first frame update
     void Start()
@@ -31,6 +40,11 @@ public class Player : MonoBehaviour
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
         if(_spawnManager == null){
             Debug.LogError("Spawn_Manager is NULL");
+        }
+
+        _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        if(_uiManager == null){
+            Debug.LogError("The UI Manager is NULL!!");
         }
     }
 
@@ -45,12 +59,6 @@ public class Player : MonoBehaviour
         {
             Shoot();
         }
-    }
-
-    public void SpeedUp()
-    {
-        _speed = 10.0f;
-        StartCoroutine(SlowDownRoutine());
     }
 
     void calculaMovimento()
@@ -102,16 +110,24 @@ public class Player : MonoBehaviour
     }
 
     public void Damage(){
-        _lives--;
 
-        if(_lives < 1){
-            
-            if(_spawnManager != null){
-                _spawnManager.playerIsDeath();
+         if(!_isShieldActivated){
+            _lives--;
+
+            if(_lives < 1){
+                
+                if(_spawnManager != null){
+                    _spawnManager.playerIsDeath();
+                }
+                
+                Destroy(this.gameObject);
             }
-            
-            Destroy(this.gameObject);
+        }else{
+            _isShieldActivated = false;
+            _shieldUI.SetActive(_isShieldActivated);
         }
+
+        
     }
 
     public void  ActiveTripleShot()
@@ -130,11 +146,41 @@ public class Player : MonoBehaviour
 
     }
 
+    public void SpeedUp()
+    {
+        _isSpeedUpActive = true;
+        _speed = 10.0f;
+        StartCoroutine(SlowDownRoutine());
+    }
+
      private IEnumerator SlowDownRoutine()
     {
         while(true){
             yield return new WaitForSeconds(5.0f);
             _speed = 5.0f;
+            _isSpeedUpActive = false;
         }
     }
+
+    public void ShieldUp()
+    {
+        _isShieldActivated = true;
+        _shieldUI.SetActive(_isShieldActivated);
+        //StartCoroutine(ShieldDown());
+    }
+
+    private IEnumerator ShieldDown()
+    {
+        while(true){
+            yield return new WaitForSeconds(5.0f);
+            _isShieldActivated = false;
+        }
+    }
+
+    public void AddScore(int points)
+    {
+        _score += points;
+        _uiManager.ShowScore(_score);
+    }
+
 }

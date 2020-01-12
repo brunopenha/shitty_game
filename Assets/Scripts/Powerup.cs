@@ -44,7 +44,7 @@ public class Powerup : MonoBehaviour
                         break;
 
                     case 2:
-                        Debug.Log("Shield Collected");
+                        player.ShieldUp();
                         break;
                     default:
                         Debug.Log("Default case");
