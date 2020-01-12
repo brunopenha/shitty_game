@@ -33,6 +33,10 @@ public class Player : MonoBehaviour
 
     private UIManager _uiManager;
 
+    [SerializeField]
+    private GameObject _rightEngine,_leftEngine;
+    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -113,6 +117,21 @@ public class Player : MonoBehaviour
 
          if(!_isShieldActivated){
             _lives--;
+            _uiManager.UpdateLives(_lives);
+
+            switch(_lives){
+                case 2:
+                    _leftEngine.SetActive(true);
+                    break;
+
+                case 1:
+                    _rightEngine.SetActive(true);
+                    break;
+
+                default:
+                    break;
+
+            }
 
             if(_lives < 1){
                 
