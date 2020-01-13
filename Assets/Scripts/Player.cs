@@ -24,7 +24,7 @@ public class Player : MonoBehaviour
     private bool _isTripleShootActive = false;
     private bool _isSpeedUpActive = false;
     private bool _isShieldActivated = false;
-    
+
     [SerializeField]
     private GameObject _shieldUI;
 
@@ -34,21 +34,37 @@ public class Player : MonoBehaviour
     private UIManager _uiManager;
 
     [SerializeField]
-    private GameObject _rightEngine,_leftEngine;
-    
+    private GameObject _rightEngine, _leftEngine;
+
+    [SerializeField]
+    private AudioClip _laserAudioClip;
+
+    private AudioSource _audioSource;
+
 
     // Start is called before the first frame update
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
         _spawnManager = GameObject.Find("Spawn_Manager").GetComponent<SpawnManager>();
-        if(_spawnManager == null){
+       
+
+        if (_spawnManager == null)
+        {
             Debug.LogError("Spawn_Manager is NULL");
         }
 
         _uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-        if(_uiManager == null){
+        if (_uiManager == null)
+        {
             Debug.LogError("The UI Manager is NULL!!");
+        }
+
+        _audioSource = GetComponent<AudioSource>();
+        if(_audioSource == null){
+            Debug.LogError("AudioSource on the Player is NULL");
+        }else{
+            _audioSource.clip = _laserAudioClip;
         }
     }
 
@@ -102,24 +118,32 @@ public class Player : MonoBehaviour
         _nextFire = Time.time + _fireRate;
         //Debug.Log("Piu!");
 
-    if(_isTripleShootActive){
-        Instantiate(_tripleShotPrefab,transform.position,Quaternion.identity);
-    }else{
-        // When we add the position with the Vector and this is called as offset
-        Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+        if (_isTripleShootActive)
+        {
+            Instantiate(_tripleShotPrefab, transform.position, Quaternion.identity);
+        }
+        else
+        {
+            // When we add the position with the Vector and this is called as offset
+            Instantiate(_laserPrefab, transform.position + new Vector3(0, 1.05f, 0), Quaternion.identity);
+
+        }
+
+        _audioSource.Play();
+
 
     }
 
-        
-    }
+    public void Damage()
+    {
 
-    public void Damage(){
-
-         if(!_isShieldActivated){
+        if (!_isShieldActivated)
+        {
             _lives--;
             _uiManager.UpdateLives(_lives);
 
-            switch(_lives){
+            switch (_lives)
+            {
                 case 2:
                     _leftEngine.SetActive(true);
                     break;
@@ -133,31 +157,37 @@ public class Player : MonoBehaviour
 
             }
 
-            if(_lives < 1){
-                
-                if(_spawnManager != null){
+            if (_lives < 1)
+            {
+
+                if (_spawnManager != null)
+                {
                     _spawnManager.playerIsDeath();
                 }
-                
+
                 Destroy(this.gameObject);
             }
-        }else{
+        }
+        else
+        {
             _isShieldActivated = false;
             _shieldUI.SetActive(_isShieldActivated);
         }
 
-        
+
     }
 
-    public void  ActiveTripleShot()
+    public void ActiveTripleShot()
     {
         _isTripleShootActive = true;
         StartCoroutine(TriplePowerDownRoutine());
     }
 
-    IEnumerator TriplePowerDownRoutine(){
+    IEnumerator TriplePowerDownRoutine()
+    {
 
-        while(true){
+        while (true)
+        {
 
             yield return new WaitForSeconds(5.0f);
             _isTripleShootActive = false;
@@ -172,9 +202,10 @@ public class Player : MonoBehaviour
         StartCoroutine(SlowDownRoutine());
     }
 
-     private IEnumerator SlowDownRoutine()
+    private IEnumerator SlowDownRoutine()
     {
-        while(true){
+        while (true)
+        {
             yield return new WaitForSeconds(5.0f);
             _speed = 5.0f;
             _isSpeedUpActive = false;
@@ -190,7 +221,8 @@ public class Player : MonoBehaviour
 
     private IEnumerator ShieldDown()
     {
-        while(true){
+        while (true)
+        {
             yield return new WaitForSeconds(5.0f);
             _isShieldActivated = false;
         }

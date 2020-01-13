@@ -14,6 +14,10 @@ public class Powerup : MonoBehaviour
     [SerializeField]
     private int powerupID;
 
+    [SerializeField]
+    private AudioClip _powerUpClip;
+
+
     // Update is called once per frame
     void Update()
     {
@@ -24,12 +28,17 @@ public class Powerup : MonoBehaviour
         if(transform.position.y <= -5.0f){
             Destroy(this.gameObject);
         }
+
+        
     }
 
     //OnTriggerCollision
     private void OnTriggerEnter2D(Collider2D other) {
         // Only be collect by the Player
         if(other.tag == "Player"){
+
+            AudioSource.PlayClipAtPoint(_powerUpClip,transform.position);
+
 
             Player player = other.transform.GetComponent<Player>();
             if(player != null){
@@ -54,6 +63,7 @@ public class Powerup : MonoBehaviour
                 
             }
             // On collected, destroy it
+            
             Destroy(this.gameObject);
             
         }
