@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityStandardAssets.CrossPlatformInput;
 
 public class Player : MonoBehaviour
 {
@@ -74,17 +75,28 @@ public class Player : MonoBehaviour
     {
         calculaMovimento();
 
+        #if UNITY_ANDROID
         // To limitade the fire rage, use Time.time (how long the game is running)
-        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _nextFire)
+        if ((Input.GetKeyDown(KeyCode.Space) || CrossPlatformInputManager.GetButtonDown("Fire")) && Time.time > _nextFire)
         {
             Shoot();
         }
+        #else
+
+        if ((Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButton(0)) && Time.time > _nextFire)
+        {
+            Shoot();
+        }
+        #endif
+
+        
     }
 
     void calculaMovimento()
     {
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        float horizontalInput = CrossPlatformInputManager.GetAxis("Horizontal"); //Input.GetAxis("Horizontal");
+        
+        float verticalInput = CrossPlatformInputManager.GetAxis("Vertical"); //Input.GetAxis("Vertical");
 
         // One unit is equal one meter --> one meter per frame
         //transform.Translate( Vector3.right * horizontalInput * _speed * Time.deltaTime); // One metter per second

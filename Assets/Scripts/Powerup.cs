@@ -31,13 +31,14 @@ public class Powerup : MonoBehaviour
 
         
     }
+    
 
     //OnTriggerCollision
     private void OnTriggerEnter2D(Collider2D other) {
         // Only be collect by the Player
         if(other.tag == "Player"){
 
-            AudioSource.PlayClipAtPoint(_powerUpClip,transform.position);
+            AudioSource.PlayClipAtPoint(_powerUpClip,transform.position,2.0f);
 
 
             Player player = other.transform.GetComponent<Player>();
